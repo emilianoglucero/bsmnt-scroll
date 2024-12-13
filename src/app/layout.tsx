@@ -58,6 +58,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <body
+        suppressHydrationWarning
         style={{ opacity: 0 }}
         className={clsx(
           basementGrotesque.variable,
