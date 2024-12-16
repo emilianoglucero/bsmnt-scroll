@@ -10,7 +10,7 @@ import {
 
 import s from './gallery-item.module.scss'
 import { GalleryImage } from '~/ts/gallery'
-import { WebGLImage } from '~/components/three/images/webgl-images/webgl-images'
+import { WebGLImage } from '~/components/three/images/webgl-image/webgl-image'
 import { ASSETS } from '~/constants/assets'
 
 interface GalleryItemProps {
