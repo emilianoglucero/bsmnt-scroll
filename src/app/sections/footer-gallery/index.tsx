@@ -23,7 +23,7 @@ export const FooterGallery = () => {
     }
   ]
   return (
-    <Container as="section" className={s.container}>
+    <Container as="section" className={s.container} id="footer-gallery-section">
       {images.map((image, index) => (
         <FooterGalleryItem key={index} image={image} />
       ))}

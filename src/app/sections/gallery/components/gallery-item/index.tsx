@@ -10,8 +10,9 @@ import {
 
 import s from './gallery-item.module.scss'
 import { GalleryImage } from '~/ts/gallery'
-import { WebGLImage } from '~/components/three/images/webgl-image/webgl-image'
+import { WebGLPixelatedImage } from '~/components/three/images/webgl-pixelated-image/webgl-pixelated-image'
 import { ASSETS } from '~/constants/assets'
+import { basementOrange } from '~/lib/constants'
 
 interface GalleryItemProps {
   image: GalleryImage
@@ -41,10 +42,18 @@ export const GalleryItem = ({ image }: GalleryItemProps) => {
         <UseCanvas>
           <ScrollScene track={trackedElement}>
             {(scrollState) => (
-              <WebGLImage
+              <WebGLPixelatedImage
+                uEffectType={0}
                 imgRef={imgRef}
-                scrollState={scrollState}
                 scale={scrollState.scale}
+                fillColor={basementOrange}
+                animation={{
+                  duration: 2,
+                  delay: 0.1,
+                  hoverIntensity: 1.5,
+                  hoverEaseFactor: 0.15,
+                  mouseEaseFactor: 0.05
+                }}
               />
             )}
           </ScrollScene>
