@@ -72,7 +72,7 @@ const AwwwardsTrophyModel = ({ scale, model }: TrophyModelProps) => {
     }
 
     const tl = gsap.timeline({
-      delay: 0.1,
+      delay: 0.2,
       ease: EASE
     })
 
