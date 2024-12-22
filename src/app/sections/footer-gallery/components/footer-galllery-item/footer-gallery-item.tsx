@@ -9,7 +9,6 @@ import React, { useRef } from 'react'
 
 import { WebGLPixelatedImage } from '~/components/three/images/webgl-pixelated-image/webgl-pixelated-image'
 import { ASSETS } from '~/constants/assets'
-import { useDeviceDetect } from '~/hooks/use-device-detect'
 import { basementOrange } from '~/lib/constants'
 import { GalleryImage } from '~/ts/gallery'
 
@@ -23,7 +22,6 @@ export const FooterGalleryItem = ({ image }: FooterGalleryItemProps) => {
   const trackedElement = useRef<HTMLDivElement>(null!)
   const imgRef = useRef<HTMLImageElement>(null!)
   const { hasSmoothScrollbar } = useScrollRig()
-  const { isTablet } = useDeviceDetect()
 
   return (
     <>
@@ -60,7 +58,7 @@ export const FooterGalleryItem = ({ image }: FooterGalleryItemProps) => {
                     mouseEaseFactor: 0.05,
                     scroll: {
                       trigger: trigger,
-                      start: isTablet ? 'top-=260% top' : 'top-=80% top',
+                      start: 'bottom bottom',
                       end: 'bottom bottom'
                     }
                   }}
