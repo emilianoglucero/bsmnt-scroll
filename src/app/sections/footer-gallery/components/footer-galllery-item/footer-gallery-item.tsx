@@ -9,8 +9,10 @@ import {
 
 import s from './footer-gallery-item.module.scss'
 import { GalleryImage } from '~/ts/gallery'
-import { WebGLImage } from '~/components/three/images/webgl-image/webgl-image'
+import { WebGLPixelatedImage } from '~/components/three/images/webgl-pixelated-image/webgl-pixelated-image'
 import { ASSETS } from '~/constants/assets'
+import { useDeviceDetect } from '~/hooks/use-device-detect'
+import { basementOrange } from '~/lib/constants'
 
 interface FooterGalleryItemProps {
   image: GalleryImage
@@ -20,6 +22,7 @@ export const FooterGalleryItem = ({ image }: FooterGalleryItemProps) => {
   const trackedElement = useRef<HTMLDivElement>(null!)
   const imgRef = useRef<HTMLImageElement>(null!)
   const { hasSmoothScrollbar } = useScrollRig()
+  const { isTablet } = useDeviceDetect()
 
   return (
     <>
@@ -39,13 +42,30 @@ export const FooterGalleryItem = ({ image }: FooterGalleryItemProps) => {
       {hasSmoothScrollbar && (
         <UseCanvas>
           <ScrollScene track={trackedElement}>
-            {(scrollState) => (
-              <WebGLImage
-                imgRef={imgRef}
-                scrollState={scrollState}
-                scale={scrollState.scale}
-              />
-            )}
+            {(scrollState) => {
+              const trigger =
+                document.getElementById('footer-gallery-section') || undefined
+              return (
+                <WebGLPixelatedImage
+                  imgRef={imgRef}
+                  scale={scrollState.scale}
+                  uEffectType={1}
+                  fillColor={basementOrange}
+                  animation={{
+                    duration: 3,
+                    delay: 0.2,
+                    hoverIntensity: 1.5,
+                    hoverEaseFactor: 0.15,
+                    mouseEaseFactor: 0.05,
+                    scroll: {
+                      trigger: trigger,
+                      start: isTablet ? 'top-=260% top' : 'top-=80% top',
+                      end: 'bottom bottom'
+                    }
+                  }}
+                />
+              )
+            }}
           </ScrollScene>
         </UseCanvas>
       )}
