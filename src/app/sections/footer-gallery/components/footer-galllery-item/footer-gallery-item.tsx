@@ -5,7 +5,7 @@ import {
   useScrollRig
 } from '@14islands/r3f-scroll-rig'
 import Image from 'next/image'
-import React, { Suspense, useRef } from 'react'
+import React, { Suspense, useRef, useState } from 'react'
 
 import { WebGLPixelatedImage } from '~/components/three/images/webgl-pixelated-image/webgl-pixelated-image'
 import { ASSETS } from '~/constants/assets'
@@ -23,6 +23,7 @@ export const FooterGalleryItem = ({ image }: FooterGalleryItemProps) => {
   const trackedElement = useRef<HTMLDivElement>(null!)
   const imgRef = useRef<HTMLImageElement>(null!)
   const { hasSmoothScrollbar } = useScrollRig()
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
 
   const sizes = getImageSizes(image.style.viewportPorcentage)
 
@@ -37,11 +38,12 @@ export const FooterGalleryItem = ({ image }: FooterGalleryItemProps) => {
           className={styles.hiddenWhenSmooth}
           onLoad={(event: React.SyntheticEvent<HTMLImageElement>) => {
             imgRef.current = event.target as HTMLImageElement
+            setIsImageLoaded(true)
           }}
         />
       </div>
 
-      {hasSmoothScrollbar && (
+      {hasSmoothScrollbar && isImageLoaded && (
         <UseCanvas>
           <ScrollScene track={trackedElement}>
             {(scrollState) => {
