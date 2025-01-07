@@ -11,7 +11,11 @@ export interface headerLink {
 export const Header = () => {
   return (
     <header className={s.header}>
-      <Link href="/" className={s.logo}>
+      <Link
+        href="/"
+        className={s.logo}
+        aria-label="Basement Studio - Return to homepage"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

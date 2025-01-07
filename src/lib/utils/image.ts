@@ -33,13 +33,13 @@ export const getImageSizes = (
   let str = ''
 
   if (mobile) {
-    str += `(max-width: 767px) ${mobile}, `
+    str += `(max-width: 767px) ${mobile}vw, `
   }
   if (tablet) {
-    str += `(max-width: 1024px) ${tablet}, `
+    str += `(max-width: 1024px) ${tablet}vw, `
   }
   if (desktop) {
-    str += desktop
+    str += `${desktop}vw`
   }
 
   return str
