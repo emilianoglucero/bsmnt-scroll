@@ -5,12 +5,13 @@ import {
   useScrollRig
 } from '@14islands/r3f-scroll-rig'
 import Image from 'next/image'
-import React, { useRef } from 'react'
+import React, { Suspense, useRef, useState } from 'react'
 
 import { WebGLPixelatedImage } from '~/components/three/images/webgl-pixelated-image/webgl-pixelated-image'
 import { ASSETS } from '~/constants/assets'
 import { basementOrange } from '~/lib/constants'
 import { GalleryImage } from '~/ts/gallery'
+import { getImageSizes } from '~/lib/utils/image'
 
 import s from './gallery-item.module.scss'
 
@@ -22,6 +23,9 @@ export const GalleryItem = ({ image }: GalleryItemProps) => {
   const trackedElement = useRef<HTMLDivElement>(null!)
   const imgRef = useRef<HTMLImageElement>(null!)
   const { hasSmoothScrollbar } = useScrollRig()
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+
+  const sizes = getImageSizes(image.style.viewportPorcentage)
 
   return (
     <>
@@ -30,31 +34,34 @@ export const GalleryItem = ({ image }: GalleryItemProps) => {
           alt={ASSETS.GALLERY.ALT}
           src={image.url}
           fill
-          priority
+          sizes={sizes}
           className={styles.hiddenWhenSmooth}
           onLoad={(event: React.SyntheticEvent<HTMLImageElement>) => {
             imgRef.current = event.target as HTMLImageElement
+            setIsImageLoaded(true)
           }}
         />
       </div>
 
-      {hasSmoothScrollbar && (
+      {hasSmoothScrollbar && isImageLoaded && (
         <UseCanvas>
           <ScrollScene track={trackedElement}>
             {(scrollState) => (
-              <WebGLPixelatedImage
-                uEffectType={0}
-                imgRef={imgRef}
-                scale={scrollState.scale}
-                fillColor={basementOrange}
-                animation={{
-                  duration: 2,
-                  delay: 0.1,
-                  hoverIntensity: 1.5,
-                  hoverEaseFactor: 0.15,
-                  mouseEaseFactor: 0.05
-                }}
-              />
+              <Suspense fallback={null}>
+                <WebGLPixelatedImage
+                  uEffectType={0}
+                  imgRef={imgRef}
+                  scale={scrollState.scale}
+                  fillColor={basementOrange}
+                  animation={{
+                    duration: 2,
+                    delay: 0.1,
+                    hoverIntensity: 1.5,
+                    hoverEaseFactor: 0.15,
+                    mouseEaseFactor: 0.05
+                  }}
+                />
+              </Suspense>
             )}
           </ScrollScene>
         </UseCanvas>

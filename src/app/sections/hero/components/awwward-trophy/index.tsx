@@ -2,7 +2,7 @@ import { styles, UseCanvas } from '@14islands/r3f-scroll-rig'
 import { ScrollScene } from '@14islands/r3f-scroll-rig'
 import { useScrollRig } from '@14islands/r3f-scroll-rig'
 import Image from 'next/image'
-import { useRef } from 'react'
+import { Suspense, useRef } from 'react'
 
 import { ASSETS } from '~/constants/assets'
 
@@ -18,7 +18,6 @@ export const AwwwardsTrophy = () => {
         <Image
           alt={ASSETS.AWWWARDS.IMAGE.ALT}
           height={360}
-          priority
           quality={100}
           src={ASSETS.AWWWARDS.IMAGE.SRC}
           width={250}
@@ -29,10 +28,12 @@ export const AwwwardsTrophy = () => {
         <UseCanvas>
           <ScrollScene track={trackedElement}>
             {(props) => (
-              <AwwwardsTrophyModel
-                {...props}
-                model={ASSETS.AWWWARDS.MODEL_PATH}
-              />
+              <Suspense fallback={null}>
+                <AwwwardsTrophyModel
+                  {...props}
+                  model={ASSETS.AWWWARDS.MODEL_PATH}
+                />
+              </Suspense>
             )}
           </ScrollScene>
         </UseCanvas>

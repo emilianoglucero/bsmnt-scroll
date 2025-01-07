@@ -1,11 +1,12 @@
 import { Float, useGLTF } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import * as THREE from 'three'
 import { GLTF } from 'three-stdlib'
-
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useIsomorphicLayoutEffect } from '~/hooks/use-isomorphic-layout-effect'
 import { EASE, gsap } from '~/lib/gsap'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface GLTFResult extends GLTF {
   nodes: {
@@ -29,34 +30,7 @@ interface TrophyModelProps {
 const AwwwardsTrophyModel = ({ scale, model }: TrophyModelProps) => {
   const meshRef = useRef<THREE.Group>(null!)
   const { nodes, materials } = useGLTF(model) as unknown as GLTFResult
-  const [scrollY, setScrollY] = useState(0)
-
   const initialRotation = -0.15
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // get normalized scroll position (0 to 1)
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight
-      const normalized = window.scrollY / maxScroll
-      setScrollY(normalized)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  useFrame(() => {
-    if (meshRef.current) {
-      // interpolate smoothly between current rotation and target rotation
-      const targetRotation = initialRotation + scrollY * Math.PI * 10
-      meshRef.current.rotation.y = THREE.MathUtils.lerp(
-        meshRef.current.rotation.y,
-        targetRotation,
-        0.1
-      )
-    }
-  })
 
   useIsomorphicLayoutEffect(() => {
     materials.m_Trophy3.transparent = true
@@ -66,16 +40,16 @@ const AwwwardsTrophyModel = ({ scale, model }: TrophyModelProps) => {
     materials.m_Outline.opacity = 0
 
     if (meshRef.current) {
-      meshRef.current.scale.set(0.2, 0.2, 0.2)
-      meshRef.current.rotation.set(0, initialRotation - Math.PI * 4, 0)
+      meshRef.current.scale.set(0.1, 0.1, 0.1)
+      meshRef.current.rotation.set(0, initialRotation + 0.35, 0)
       meshRef.current.position.x = 4
     }
 
     const tl = gsap.timeline({
-      delay: 0.2,
       ease: EASE
     })
 
+    // trophy intro animation
     tl.to(meshRef.current.position, {
       x: 0,
       duration: 1.4,
@@ -111,6 +85,24 @@ const AwwwardsTrophyModel = ({ scale, model }: TrophyModelProps) => {
         },
         '<'
       )
+
+    // trophy scroll rotation
+    const scrollRotation = gsap.to(meshRef.current.rotation, {
+      y: initialRotation + Math.PI * 3, // Two full rotations
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+        immediateRender: false
+      }
+    })
+
+    return () => {
+      if (scrollRotation) {
+        scrollRotation.kill()
+      }
+    }
   }, [materials, initialRotation])
 
   const minScale = Array.isArray(scale)
