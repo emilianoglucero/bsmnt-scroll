@@ -28,12 +28,31 @@ export const findClosestNextImageWidth = (width: number): NextImageWidth => {
 export const getImageSizes = (
   desktopColumns: number,
   tabletColumns: number = desktopColumns,
-  mobileColumns: number = desktopColumns,
-  totalColumns: number = 12
+  mobileColumns: number = 12,
+  totalColumns: number = 12,
+  maxWidth: number = 1200 // maximum content width in pixels
 ): string => {
+  if (
+    desktopColumns < 1 ||
+    desktopColumns > totalColumns ||
+    tabletColumns < 1 ||
+    tabletColumns > totalColumns ||
+    mobileColumns < 1 ||
+    mobileColumns > totalColumns
+  ) {
+    throw new Error(`Column values must be between 1 and ${totalColumns}`)
+  }
+
   const desktopPercentage = (desktopColumns / totalColumns) * 100
   const tabletPercentage = (tabletColumns / totalColumns) * 100
   const mobilePercentage = (mobileColumns / totalColumns) * 100
 
-  return `(max-width: 768px) ${mobilePercentage}vw, (max-width: 1024px) ${tabletPercentage}vw, ${desktopPercentage}vw`
+  // convert maxWidth to rem (assuming 16px base font size)
+  const maxWidthRem = maxWidth / 16
+
+  return (
+    `(max-width: 767px) ${mobilePercentage}vw, ` +
+    `(max-width: 1024px) ${tabletPercentage}vw, ` +
+    `min(${desktopPercentage}vw, ${maxWidthRem}rem)`
+  )
 }
