@@ -5,7 +5,7 @@ import {
   useScrollRig
 } from '@14islands/r3f-scroll-rig'
 import Image from 'next/image'
-import React, { Suspense, useRef } from 'react'
+import React, { Suspense, useRef, useState } from 'react'
 
 import { WebGLPixelatedImage } from '~/components/three/images/webgl-pixelated-image/webgl-pixelated-image'
 import { ASSETS } from '~/constants/assets'
@@ -23,6 +23,7 @@ export const GalleryItem = ({ image }: GalleryItemProps) => {
   const trackedElement = useRef<HTMLDivElement>(null!)
   const imgRef = useRef<HTMLImageElement>(null!)
   const { hasSmoothScrollbar } = useScrollRig()
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
 
   const sizes = getImageSizes(image.style.viewportPorcentage)
 
@@ -33,16 +34,16 @@ export const GalleryItem = ({ image }: GalleryItemProps) => {
           alt={ASSETS.GALLERY.ALT}
           src={image.url}
           fill
-          priority
           sizes={sizes}
           className={styles.hiddenWhenSmooth}
           onLoad={(event: React.SyntheticEvent<HTMLImageElement>) => {
             imgRef.current = event.target as HTMLImageElement
+            setIsImageLoaded(true)
           }}
         />
       </div>
 
-      {hasSmoothScrollbar && (
+      {hasSmoothScrollbar && isImageLoaded && (
         <UseCanvas>
           <ScrollScene track={trackedElement}>
             {(scrollState) => (

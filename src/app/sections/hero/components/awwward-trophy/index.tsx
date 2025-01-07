@@ -18,7 +18,6 @@ export const AwwwardsTrophy = () => {
         <Image
           alt={ASSETS.AWWWARDS.IMAGE.ALT}
           height={360}
-          priority
           quality={100}
           src={ASSETS.AWWWARDS.IMAGE.SRC}
           width={250}

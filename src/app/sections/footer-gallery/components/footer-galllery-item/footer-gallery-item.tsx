@@ -33,7 +33,6 @@ export const FooterGalleryItem = ({ image }: FooterGalleryItemProps) => {
           alt={ASSETS.GALLERY.ALT}
           src={image.url}
           fill
-          priority
           sizes={sizes}
           className={styles.hiddenWhenSmooth}
           onLoad={(event: React.SyntheticEvent<HTMLImageElement>) => {
